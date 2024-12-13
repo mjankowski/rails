@@ -10,26 +10,25 @@ module ActionController
   #
   # For API controllers, the implicit response is always `204 No Content`.
   #
-  # For all other controllers, we use these heuristics to decide whether to render
-  # a template, raise an error for a missing template, or respond with `204 No
-  # Content`:
+  # For all other controllers, we use these heuristics to decide whether to
+  # render a template, raise an error for a missing template, or respond with
+  # `204 No Content`:
   #
-  # First, if we DO find a template, it's rendered. Template lookup accounts for
+  # When we *do* find a template, it's rendered. Template lookup accounts for
   # the action name, locales, format, variant, template handlers, and more (see
-  # `render` for details).
+  # {render}[rdoc-ref:ActionController::Rendering#render] for details).
   #
-  # Second, if we DON'T find a template but the controller action does have
-  # templates for other formats, variants, etc., then we trust that you meant to
-  # provide a template for this response, too, and we raise
-  # ActionController::UnknownFormat with an explanation.
+  # When we *do not* find a template:
   #
-  # Third, if we DON'T find a template AND the request is a page load in a web
-  # browser (technically, a non-XHR GET request for an HTML response) where you
-  # reasonably expect to have rendered a template, then we raise
-  # ActionController::MissingExactTemplate with an explanation.
+  # - If the controller action has templates for other formats, variants, etc.,
+  #   then we trust that you meant to provide a template for this response, too,
+  #   and we raise `ActionController::UnknownFormat` with an explanation.
   #
-  # Finally, if we DON'T find a template AND the request isn't a browser page
-  # load, then we implicitly respond with `204 No Content`.
+  # - If the request is a page load in a web browser (a non-XHR GET request for
+  #   an HTML response) where you would expect to have rendered a template, then
+  #   we raise `ActionController::MissingExactTemplate` with an explanation.
+  #
+  # - Otherwise, we implicitly respond with `204 No Content`.
   module ImplicitRender
     # :stopdoc:
     include BasicImplicitRender
